@@ -1,0 +1,286 @@
+create database healthcare;
+
+use healthcare;
+
+
+
+###PATIENT
+
+CREATE TABLE Patient (
+Patient_ID VARCHAR(10) PRIMARY KEY,
+Full_Name  VARCHAR(100) NOT NULL UNIQUE,
+Date_of_Birth DATE  NOT NULL,
+Gender VARCHAR(20),
+Contact_Number VARCHAR(15) NOT NULL
+);
+
+describe table Patient;
+
+select * from Patient;
+
+###DOCTOR
+
+CREATE TABLE Doctor (
+Doctor_ID  VARCHAR(10) PRIMARY KEY,
+Name VARCHAR(100) NOT NULL,
+Specialisation  VARCHAR(50)  NOT NULL,
+Phone_Number VARCHAR(15),
+Email_Address VARCHAR(100)
+);
+
+describe table Doctor;
+
+select * from Doctor;
+
+
+###FACILITY
+
+CREATE TABLE Facility (
+Facility_Code VARCHAR(10) PRIMARY KEY,
+Name VARCHAR(100) NOT NULL,
+Address VARCHAR(200) NOT NULL,
+Contact_Number VARCHAR(15)  NOT NULL
+);
+
+select * from Facility;
+
+ ###TREATMENT
+ 
+CREATE TABLE Treatment (
+Treatment_ID VARCHAR(10) PRIMARY KEY,
+Name VARCHAR(100) NOT NULL,
+Description VARCHAR(50),  
+Cost DECIMAL(8,2) NOT NULL
+);
+
+select * from Treatment;
+
+###APPOINTMENT
+
+
+CREATE TABLE Appointment (
+Appointment_ID VARCHAR(10) PRIMARY KEY,
+Appointment_Date DATE NOT NULL,
+Appointment_Time TIME  NOT NULL,
+Patient_ID VARCHAR(10) NOT NULL,
+Doctor_ID VARCHAR(10) NOT NULL,
+Facility_Code  VARCHAR(10) NOT NULL,
+FOREIGN KEY (Patient_ID)  REFERENCES Patient(Patient_ID),
+FOREIGN KEY (Doctor_ID)  REFERENCES Doctor(Doctor_ID),
+FOREIGN KEY (Facility_Code) REFERENCES Facility(Facility_Code)
+);
+
+select * from Appointment;
+
+###PATIENT_DOCTOR_TREATMENT 
+
+CREATE TABLE Patient_Doctor_Treatment (
+Patient_ID VARCHAR(10),
+Doctor_ID  VARCHAR(10),
+Treatment_ID VARCHAR(10),
+Treatment_Date  DATE NOT NULL,
+PRIMARY KEY (Patient_ID, Doctor_ID, Treatment_ID, Treatment_Date),
+FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),
+FOREIGN KEY (Doctor_ID)  REFERENCES Doctor(Doctor_ID),
+FOREIGN KEY (Treatment_ID) REFERENCES Treatment(Treatment_ID)
+);
+
+select * from Patient_Doctor_Treatment;
+
+###APPOINTMENT_TREATMENT 
+
+CREATE TABLE Appointment_Treatment (
+Appointment_ID  VARCHAR(10),
+Treatment_ID  VARCHAR(10),
+PRIMARY KEY (Appointment_ID, Treatment_ID),
+FOREIGN KEY (Appointment_ID) REFERENCES Appointment(Appointment_ID),
+FOREIGN KEY (Treatment_ID) REFERENCES Treatment(Treatment_ID)
+);
+
+select * from Appointment_Treatment;
+
+###Insert Patient
+
+INSERT INTO Patient (Patient_ID, Full_Name, Date_of_Birth, Gender, Contact_Number) VALUES 
+('P1','Alice Green','1985-03-15','Female','98765-10001'),
+('P2','Mark Lee','1978-07-22','Male','98765-10002'),
+('P3','Ananya Ramesh','1993-11-08','Female','98765-10003'),
+('P4','Prakash Menon','1965-05-30','Male','98765-10004');
+
+select * from Patient;
+
+###Insert Doctor
+
+INSERT INTO Doctor (Doctor_ID, Name, Specialisation, Phone_Number, Email_Address) VALUES 
+('D1','Dr.Arjun Nair','Cardiology','98765-20001','arjun.nair@cgh.com'),
+('D2','Dr.Kavya Shetty', 'Orthopaedics','98765-20002','kavya.shetty@bcc.in'),
+('D3','Dr. Rohit Krishna','Neurology','98765-20003','rohit.krishna@cgh.in'),
+('D4','Dr. Meera Iyer','Paediatrics','98765-20004','meera.iyer@kmc.com');
+
+select * from Doctor;
+
+###Insert Facility
+
+INSERT INTO Facility (Facility_Code, Name, Address, Contact_Number) VALUES 
+('F1','Chennai General Hospital','MG Road, Chennai','9140001000'),
+('F2','Bengaluru City Clinic','Brigade Road, Bengaluru','81041002000'),
+('F3','Kochi Medical Centre','Marine Drive, Mumbai','97043003000');
+
+select * from Facility;
+
+###Insert Treatment
+
+INSERT INTO Treatment (Treatment_ID, Name, Description, Cost) VALUES 
+('T1','Physiotherapy','Rehabilitation session', 50.00),
+('T2','X-Ray','Diagnostic imaging', 100.00),
+('T3','Consultation','Initial assessment',75.00),
+('T4','Blood Test','Complete blood count',30.00);
+
+select * from Treatment;
+
+###Insert Appointment
+
+INSERT INTO Appointment (Appointment_ID, Appointment_Date, Appointment_Time,
+                         Patient_ID, Doctor_ID, Facility_Code) VALUES 
+('A101', '2025-02-15', '09:00:00', 'P1', 'D1', 'F1'), 
+('A102', '2024-02-16', '10:30:00', 'P2', 'D2', 'F2'), 
+('A103', '2026-02-17', '14:00:00', 'P1', 'D3', 'F1'),  
+('A104', '2022-02-18', '11:00:00', 'P3', 'D1', 'F3'),  
+('A105', '2026-02-19', '15:30:00', 'P4', 'D4', 'F2');
+
+select * from Appointment;
+
+###Insert Patient_Doctor_Treatment 
+
+INSERT INTO Patient_Doctor_Treatment
+       (Patient_ID, Doctor_ID, Treatment_ID, Treatment_Date)
+VALUES
+('P1', 'D1', 'T1', '2026-02-15'), 
+('P1', 'D1', 'T2', '2026-02-15'),  
+('P1', 'D3', 'T3', '2026-02-17'),
+('P2', 'D2', 'T1', '2026-02-16'), 
+('P3', 'D1', 'T4', '2026-02-18'),
+('P4', 'D4', 'T3', '2026-02-19'); 
+
+select * from Patient_Doctor_Treatment;
+
+###Insert Appointment_Treatment 
+
+INSERT INTO Appointment_Treatment (Appointment_ID, Treatment_ID) VALUES
+('A101', 'T1'),
+('A101', 'T2'),
+('A102', 'T1'),
+('A103', 'T3'),
+('A104', 'T4'),
+('A105', 'T3');
+
+select * from Appointment_Treatment;
+
+
+
+###PART 3 Business Questions
+
+###a) List all appointments for patient 'Alice Green'
+
+
+SELECT a.*
+FROM Appointment a
+JOIN Patient p ON a.Patient_ID = p.Patient_ID
+WHERE p.Full_Name = 'Alice Green';
+
+###b) Total number of treatments administered by each doctor
+
+SELECT d.Doctor_ID,
+COUNT(*) AS Total_Treatments
+FROM Appointment a
+JOIN Appointment_Treatment at ON a.Appointment_ID = at.Appointment_ID
+JOIN Doctor d ON a.Doctor_ID = d.Doctor_ID
+GROUP BY d.Doctor_ID;
+
+###c) Doctors who have treated more than 5 patients
+
+SELECT d.Doctor_ID,
+COUNT(DISTINCT a.Patient_ID) AS Patient_Count
+FROM Appointment a
+JOIN Doctor d ON a.Doctor_ID = d.Doctor_ID
+GROUP BY d.Doctor_ID
+HAVING COUNT(DISTINCT a.Patient_ID) > 5;
+
+###d) Facilities where patient 'Mark Lee' has received treatment
+
+SELECT DISTINCT f.*
+FROM Appointment a
+JOIN Patient p ON a.Patient_ID = p.Patient_ID
+JOIN Facility f ON a.Facility_Code = f.Facility_Code
+WHERE p.Full_Name = 'Mark Lee';
+
+### e: Patients with their doctors and treatment names
+
+SELECT p.Full_Name,
+d.Name,
+t.Name
+FROM Appointment a
+JOIN Patient p ON a.Patient_ID = p.Patient_ID
+JOIN Doctor d ON a.Doctor_ID = d.Doctor_ID
+JOIN Appointment_Treatment at ON a.Appointment_ID = at.Appointment_ID
+JOIN Treatment t ON at.Treatment_ID = t.Treatment_ID;
+
+###f) Most expensive treatment and the doctor who administered it
+
+SELECT t.Name,t.Cost,d.Name
+FROM Treatment t
+JOIN Appointment_Treatment at ON t.Treatment_ID = at.Treatment_ID
+JOIN Appointment a ON at.Appointment_ID = a.Appointment_ID
+JOIN Doctor d ON a.Doctor_ID = d.Doctor_ID
+WHERE t.Cost = (SELECT MAX(Cost) FROM Treatment);
+
+###g) Patients with appointments in more than one facility
+
+SELECT p.Full_Name,
+COUNT(DISTINCT a.Facility_Code) AS Facility_Count
+FROM Appointment a
+JOIN Patient p ON a.Patient_ID = p.Patient_ID
+GROUP BY p.Patient_ID, p.Full_Name
+HAVING COUNT(DISTINCT a.Facility_Code) > 1;
+
+### 7: Constraints and index
+
+#1) Ensure patient names are NOT NULL and UNIQUE
+
+CREATE TABLE Patient (
+Patient_ID VARCHAR(10) PRIMARY KEY,
+Full_Name VARCHAR(100) NOT NULL UNIQUE,
+Date_of_Birth DATE NOT NULL,
+Gender ENUM('Male', 'Female', 'Other') NOT NULL,
+Contact_Number VARCHAR(15)  NOT NULL
+);
+
+#2) Add an index on doctor name to speed up searches
+
+CREATE INDEX idx_doctor_name ON Doctor(Name);
+
+
+### 8: Treatments by facility with simple CASE and GROUP BY
+
+SELECT f.Name,
+COUNT(at.Treatment_ID) AS Total_Treatments,
+AVG(t.Cost)AS Average_Treatment_Cost,
+CASE
+WHEN COUNT(at.Treatment_ID) > 10 THEN 'High Activity'
+ELSE 'Low Activity'
+END AS Activity_Level
+FROM Facility f
+JOIN Appointment a ON f.Facility_Code = a.Facility_Code
+JOIN Appointment_Treatment at ON a.Appointment_ID = at.Appointment_ID
+JOIN Treatment t ON at.Treatment_ID = t.Treatment_ID
+GROUP BY f.Facility_Code, f.Name;
+
+
+
+
+
+
+
+
+
+
