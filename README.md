@@ -1,181 +1,181 @@
-# Healthcare_DBMS_Project
+# Healthcare Appointment and Patient Records System
 
+A relational database project designed and implemented in MySQL to model a healthcare appointment and patient records environment.
 
+This project demonstrates the design of a structured healthcare database for managing patients, doctors, appointments, treatments, and healthcare facilities. It showcases relational modelling, normalization, and SQL-based analysis in a realistic operational setting.
 
-This project is my first hands-on database project, where I designed and implemented a Healthcare Appointment and Patient Records System using MySQL.
+## Problem statement
 
+Healthcare systems manage large volumes of interconnected data across patients, clinicians, appointments, treatments, and facilities. Without a well-designed relational database, this information can become redundant, inconsistent, and difficult to query efficiently.
 
-It showcases my ability to:
-Design a relational database from a real-world scenario
-Implement entity relationships (1:N and M:N)
-Apply normalization techniques (up to 3NF)
-Write advanced SQL queries to solve business problems
+This project addresses that challenge by building a normalized healthcare database that supports accurate record management, enforces referential integrity, and enables meaningful reporting through SQL.
 
+## Project objectives
 
+The main objectives of this project are to:
 
- Why This Project Matters ?
+- design a relational database from a real-world healthcare scenario,
+- implement entity relationships including one-to-one, one-to-many, and many-to-many relationships,
+- apply normalization principles up to Third Normal Form (3NF),
+- write SQL queries for reporting and business insight generation,
+- use keys, constraints, and indexing to support data integrity and performance.
 
-Although this is my first project, it reflects strong foundational skills in:
+## Why this project matters
 
-Database Design Thinking
-Relational Modeling (ER concepts)
-SQL Development & Query Optimization
-Data Analysis using SQL queries
-This project simulates a real healthcare system, making it relevant for real-world applications.
+This project reflects key database development skills that are directly relevant to real-world systems:
 
+- relational database design,
+- entity-relationship modelling,
+- normalization,
+- SQL querying and reporting,
+- structured thinking around data integrity and system design.
 
-Healthcare Appointment and Patient Records System
+The healthcare domain provides a strong practical use case because it involves multiple linked entities, operational workflows, and reporting requirements.
 
- Project Overview
+## Project scope
 
-This project is a Healthcare Database Management System developed as part of the Database Design and Implementation module. It demonstrates the design and implementation of a relational database to manage:
+The system is designed to manage the following core areas:
 
-Patients
-Doctors
-Appointments
-Treatments
-Healthcare Facilities
-The system is built using MySQL and focuses on applying database design principles, normalization, and advanced SQL querying.
+- patients,
+- doctors,
+- appointments,
+- treatments,
+- healthcare facilities.
 
- Objectives
+Together, these entities form a simplified healthcare information system capable of supporting both operational data management and analytical queries.
 
-The main objectives of this project are:
-Design a structured relational database from a real-world healthcare scenario
-Implement entity relationships (1:1, 1:N, M:N)
-Apply normalization techniques (up to 3NF)
-Write SQL queries for business insights and reporting
-Use constraints, indexing, and aggregation functions
+## Database design
 
+### Main entities
 
+The database includes the following main tables:
 
- Database Design
- 
-Entities Created
-The database consists of the following main tables:
-Patient – Stores patient details
-Doctor – Stores doctor information and specialization
-Facility – Represents hospitals/clinics
-Treatment – Stores treatment details and cost
-Appointment – Links patients, doctors, and facilities
-Relationship Tables (Junction Tables)
-To handle many-to-many relationships:
-Patient_Doctor_Treatment
-Appointment_Treatment
+- **Patient** – stores patient details,
+- **Doctor** – stores doctor information and specialization,
+- **Facility** – represents hospitals and clinics,
+- **Treatment** – stores treatment details and cost,
+- **Appointment** – links patients, doctors, and facilities.
 
+### Junction tables
 
+To support many-to-many relationships, the design includes:
 
+- **Patient_Doctor_Treatment**
+- **Appointment_Treatment**
 
-  Relationships Implemented
-  
-Relationship Type	Description
-1:N	One patient → many appointments
-1:N	One doctor → many appointments
-1:N	One facility → many appointments
-M:N	Patients ↔ Doctors (via treatments)
-M:N	Appointments ↔ Treatments
+### Relationships implemented
 
-  
-  Technologies Used
+| Relationship | Description |
+|-------------|-------------|
+| 1:N | One patient can have many appointments |
+| 1:N | One doctor can have many appointments |
+| 1:N | One facility can host many appointments |
+| M:N | Patients and doctors are linked through treatments |
+| M:N | Appointments and treatments are linked through a junction table |
 
-MySQL – Database creation and querying
-SQL – Data definition and manipulation
-GitHub – Version control and project hosting
+## Schema features
 
+Key schema features include:
 
-
-  Database Schema
-
-Key features of the schema:
-Primary Keys for unique identification
-Foreign Keys for referential integrity
-Composite Keys for junction tables
-Constraints (NOT NULL, UNIQUE)
-Indexing for performance optimization
+- primary keys for unique row identification,
+- foreign keys for referential integrity,
+- composite keys for junction tables,
+- constraints such as `NOT NULL` and `UNIQUE`,
+- indexing to improve query performance.
 
 Example:
 
+```sql
 CREATE INDEX idx_doctor_name ON Doctor(Name);
+```
 
-Sample Data
+## Sample data
 
-The database includes realistic sample data:
+The database includes realistic sample records for testing and demonstration purposes, including:
 
-4 Patients
-4 Doctors
-3 Facilities
-4 Treatments
+- 4 patients,
+- 4 doctors,
+- 3 facilities,
+- 4 treatments,
+- multiple appointments and treatment mappings.
 
-Multiple appointments and treatment mappings
+## SQL analysis and business queries
 
- Business Queries Implemented
+The project answers several healthcare-related business questions, including:
 
-The project answers key healthcare-related business questions:
-List appointments for a specific patient
-Count total treatments per doctor
-Identify doctors treating more than a set number of patients
-Find facilities used by a patient
-Display patients with their doctors and treatments
-Identify the most expensive treatment and responsible doctor
-Find patients visiting multiple facilities
+- listing appointments for a specific patient,
+- counting total treatments per doctor,
+- identifying doctors treating more than a specified number of patients,
+- finding facilities used by a patient,
+- displaying patients together with their doctors and treatments,
+- identifying the most expensive treatment and the responsible doctor,
+- finding patients who visit multiple facilities.
 
- Advanced SQL Features
+## Advanced SQL features
 
-JOIN operations (INNER JOIN across multiple tables)
-GROUP BY & HAVING for aggregation
-CASE statements for classification
-Subqueries for dynamic filtering
+The project uses several important SQL techniques, including:
+
+- `INNER JOIN` operations across multiple tables,
+- `GROUP BY` and `HAVING` for aggregation,
+- `CASE` statements for classification,
+- subqueries for filtering and analysis.
 
 Example:
 
+```sql
 CASE
-WHEN COUNT(at.Treatment_ID) > 10 THEN 'High Activity'
-ELSE 'Low Activity'
+    WHEN COUNT(at.Treatment_ID) > 10 THEN 'High Activity'
+    ELSE 'Low Activity'
 END
+```
 
- Normalization
+## Normalization
 
-The database design follows normalization principles:
+The database design follows standard normalization principles:
 
-1NF – Atomic values, no repeating groups
-2NF – Removal of partial dependencies
-3NF – Removal of transitive dependencies
+- **First Normal Form (1NF)** – atomic values and no repeating groups,
+- **Second Normal Form (2NF)** – removal of partial dependencies,
+- **Third Normal Form (3NF)** – removal of transitive dependencies.
 
-This ensures:
+These steps help reduce redundancy, improve data integrity, and support efficient storage and maintenance.
 
-Reduced redundancy
-Improved data integrity
-Efficient data storage
+## Technologies used
 
- Key Features
+- **MySQL** – database creation and query execution,
+- **SQL** – data definition, manipulation, and reporting,
+- **GitHub** – version control and project hosting.
 
- Fully normalized relational database
- Supports complex healthcare relationships
- Includes realistic sample data
- Optimized with indexing
- Business-driven SQL queries
+## How to run the project
 
- How to Run the Project
+1. Clone the repository.
+2. Open MySQL Workbench, or any compatible SQL environment.
+3. Create the database:
 
-Clone the repository
-Open MySQL Workbench (or any SQL tool)
-Run the SQL script:
-create database healthcare;
-use healthcare
-Execute all table creation and insert statements
-Run the queries to explore insights
+```sql
+CREATE DATABASE healthcare;
+USE healthcare;
+```
 
- Assignment Context
+4. Execute the SQL script containing:
+- table creation statements,
+- constraints and relationships,
+- sample data inserts,
+- analytical queries.
 
-This project was developed based on a university assignment requiring:
+## Repository contents
 
-ER modeling
-SQL implementation
-Query development
-Normalization
-Data analysis using SQL 
-DBDI-Set Exercise-2
+A typical repository structure for this project may include:
 
- Author
+```text
+.
+├── README.md
+├── LICENSE
+├── healthcare_schema.sql
+├── queries.sql
+└── docs/
+```
 
-Kammani Arunsai
+## Author
+
+**Kammani Arunsai**  
 BSc Computer Science and Digitisation
